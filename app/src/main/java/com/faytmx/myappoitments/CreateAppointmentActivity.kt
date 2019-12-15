@@ -7,8 +7,9 @@ import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.RadioButton
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import kotlinx.android.synthetic.main.activity_create_appointment.*
-import kotlinx.android.synthetic.main.activity_menu.*
+
 import java.util.*
 
 class CreateAppointmentActivity : AppCompatActivity() {
@@ -20,8 +21,13 @@ class CreateAppointmentActivity : AppCompatActivity() {
         setContentView(R.layout.activity_create_appointment)
 
         btnNext.setOnClickListener {
-            cvStep1.visibility = View.GONE
-            cvStep2.visibility = View.VISIBLE
+            if (etDescription.text.toString().length < 3) {
+                etDescription.error = getString(R.string.valitate_appoitment_description)
+            } else {
+                cvStep1.visibility = View.GONE
+                cvStep2.visibility = View.VISIBLE
+            }
+
         }
 
         btnCreateAppointment.setOnClickListener {
@@ -109,4 +115,28 @@ class CreateAppointmentActivity : AppCompatActivity() {
 
     fun Int.twoDigits() = if (this >= 10) this.toString() else "0$this"
 
+    override fun onBackPressed() {
+
+        if (cvStep2.visibility == View.VISIBLE) {
+            cvStep2.visibility = View.GONE
+            cvStep1.visibility = View.VISIBLE
+        } else if (cvStep1.visibility == View.VISIBLE) {
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle(getString(R.string.dialog_create_appointment_exit_title))
+            builder.setMessage(getString(R.string.dialog_create_appointment_exit_message))
+            builder.setPositiveButton(getString(R.string.positive_button)) { _, _ ->
+                finish()
+            }
+            builder.setNegativeButton(getString(R.string.negative_button)) { dialog, _ ->
+                dialog.dismiss()
+            }
+
+            val dialog = builder.create()
+            dialog.show()
+
+        }
+
+
+//        super.onBackPressed()
+    }
 }
