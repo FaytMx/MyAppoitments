@@ -1,10 +1,11 @@
-package com.faytmx.myappoitments
+package com.faytmx.myappoitments.ui
 
-import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.faytmx.myappoitments.PreferenceHelper
 import com.faytmx.myappoitments.PreferenceHelper.set
+import com.faytmx.myappoitments.R
 import kotlinx.android.synthetic.main.activity_menu.*
 
 class MenuActivity : AppCompatActivity() {
@@ -14,18 +15,20 @@ class MenuActivity : AppCompatActivity() {
         setContentView(R.layout.activity_menu)
 
         btnCreateAppointmen.setOnClickListener{
-            val intent = Intent(this,CreateAppointmentActivity::class.java)
+            val intent = Intent(this,
+                CreateAppointmentActivity::class.java)
             startActivity(intent)
         }
 
         btnMyAppointment.setOnClickListener{
-            val intent = Intent(this,AppointmentsActivity::class.java)
+            val intent = Intent(this,
+                AppointmentsActivity::class.java)
             startActivity(intent)
         }
 
         btnLogout.setOnClickListener{
             clearSessionPreference()
-            val intent = Intent(this,MainActivity::class.java)
+            val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
             finish()
         }
@@ -37,7 +40,8 @@ class MenuActivity : AppCompatActivity() {
 //        editor.putBoolean("session", false)
 //        editor.apply()
 
-        val preferences = PreferenceHelper.defaultPrefs(this )
+        val preferences =
+            PreferenceHelper.defaultPrefs(this)
         preferences["session"] = false
     }
 

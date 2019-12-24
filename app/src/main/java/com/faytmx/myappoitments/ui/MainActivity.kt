@@ -1,19 +1,21 @@
-package com.faytmx.myappoitments
+package com.faytmx.myappoitments.ui
 
-import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import com.faytmx.myappoitments.PreferenceHelper
 import kotlinx.android.synthetic.main.activity_main.*
 import com.faytmx.myappoitments.PreferenceHelper.get
 import com.faytmx.myappoitments.PreferenceHelper.set
+import com.faytmx.myappoitments.R
 import com.google.android.material.snackbar.Snackbar
 
 class MainActivity : AppCompatActivity() {
 
     private val snackBar by lazy{
-        Snackbar.make(mainLayout,R.string.press_back_again, Snackbar.LENGTH_SHORT)
+        Snackbar.make(mainLayout,
+            R.string.press_back_again, Snackbar.LENGTH_SHORT)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,7 +26,8 @@ class MainActivity : AppCompatActivity() {
         val preferences = getSharedPreferences("general", Context.MODE_PRIVATE)
         val session = preferences.getBoolean("session", false)
 */
-        val preferences = PreferenceHelper.defaultPrefs(this )
+        val preferences =
+            PreferenceHelper.defaultPrefs(this)
         if (preferences["session", false])
             goToMenuActivity()
 
@@ -59,7 +62,8 @@ class MainActivity : AppCompatActivity() {
 //        val editor = preferences.edit()
 //        editor.putBoolean("session", true)
 //        editor.apply()
-        val preferences = PreferenceHelper.defaultPrefs(this )
+        val preferences =
+            PreferenceHelper.defaultPrefs(this)
         preferences["session"] = true
 
     }

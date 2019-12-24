@@ -8,7 +8,7 @@
     android:gravity="center"
     android:orientation="vertical"
     android:padding="16dp"
-    tools:context=".MenuActivity"
+    tools:context=".ui.MenuActivity"
     app:cardUseCompatPadding="true"
     app:cardElevation="4dp"
     app:cardCornerRadius="3dp"

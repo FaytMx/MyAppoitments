@@ -1,9 +1,10 @@
-package com.faytmx.myappoitments
+package com.faytmx.myappoitments.ui
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.faytmx.myappoitments.R
 import com.faytmx.myappoitments.model.Appointment
 import kotlinx.android.synthetic.main.item_appointment.view.*
 
@@ -28,7 +29,11 @@ class AppointmentAdapter(private val appointments: ArrayList<Appointment>) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            LayoutInflater.from(parent.context).inflate(R.layout.item_appointment, parent, false)
+            LayoutInflater.from(parent.context).inflate(
+                R.layout.item_appointment,
+                parent,
+                false
+            )
         )
     }
 

@@ -1,8 +1,9 @@
-package com.faytmx.myappoitments
+package com.faytmx.myappoitments.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.faytmx.myappoitments.R
 import com.faytmx.myappoitments.model.Appointment
 import kotlinx.android.synthetic.main.activity_appointments.*
 
@@ -19,6 +20,7 @@ class AppointmentsActivity : AppCompatActivity() {
         appointments.add(Appointment(3,"Médico BB","23/12/2019", "9:00 AM"))
 
         rVAppointments.layoutManager = LinearLayoutManager(this)
-        rVAppointments.adapter = AppointmentAdapter(appointments)
+        rVAppointments.adapter =
+            AppointmentAdapter(appointments)
     }
 }
