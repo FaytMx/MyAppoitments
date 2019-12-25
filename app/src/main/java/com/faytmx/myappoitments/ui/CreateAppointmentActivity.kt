@@ -2,6 +2,8 @@ package com.faytmx.myappoitments.ui
 
 import android.app.DatePickerDialog
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -12,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.faytmx.myappoitments.R
 import com.faytmx.myappoitments.io.ApiService
 import com.faytmx.myappoitments.model.Doctor
+import com.faytmx.myappoitments.model.Schedule
 import com.faytmx.myappoitments.model.Specilaty
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_create_appointment.*
@@ -73,6 +76,7 @@ class CreateAppointmentActivity : AppCompatActivity() {
 
         loadSpecialties()
         listenSpecialtyChanges()
+        listenDoctorAndDateChanges()
 
         val doctorOptions = arrayOf("Doctor A", "Doctor B", "Doctor C")
         spinnerDoctors.adapter =
@@ -172,6 +176,72 @@ class CreateAppointmentActivity : AppCompatActivity() {
             }
 
         })
+    }
+
+    private fun listenDoctorAndDateChanges() {
+        spinnerDoctors.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+
+            }
+
+            override fun onItemSelected(
+                adapter: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                val doctor = adapter?.getItemAtPosition(position) as Doctor
+//                Toast.makeText(this@CreateAppointmentActivity, "id: ${specialty.id}", Toast.LENGTH_SHORT).show()
+                loadHours(doctor.id, etScheduledDate.text.toString())
+            }
+        }
+
+        etScheduledDate.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val doctor: Doctor = spinnerDoctors.selectedItem as Doctor
+                loadHours(doctor.id, etScheduledDate.text.toString())
+            }
+
+        })
+    }
+
+    private fun loadHours(doctorId: Int, date: String) {
+        val call = apiService.getHours(doctorId, date)
+
+        call.enqueue(object : Callback<Schedule> {
+            override fun onFailure(call: Call<Schedule>, t: Throwable) {
+                Toast.makeText(
+                    this@CreateAppointmentActivity,
+                    getString(R.string.error_loading_hours),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
+            override fun onResponse(call: Call<Schedule>, response: Response<Schedule>) {
+                if (response.isSuccessful) {
+                    val schedule = response.body()
+                    Toast.makeText(
+                        this@CreateAppointmentActivity,
+                        "morning: ${schedule?.morning?.size} , afternoon: ${schedule?.afternoon?.size}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+
+        })
+//        Toast.makeText(
+//            this@CreateAppointmentActivity,
+//            "doctor: ${doctorId}, date: ${date}",
+//            Toast.LENGTH_SHORT
+//        ).show()
     }
 
     private fun showAppointmentDataToConfirm() {
