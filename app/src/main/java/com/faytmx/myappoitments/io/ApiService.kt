@@ -1,5 +1,6 @@
 package com.faytmx.myappoitments.io
 
+import com.faytmx.myappoitments.io.response.LoginResponse
 import com.faytmx.myappoitments.model.Doctor
 import com.faytmx.myappoitments.model.Schedule
 import com.faytmx.myappoitments.model.Specilaty
@@ -8,9 +9,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.GET
-import retrofit2.http.Path
-import retrofit2.http.Query
+import retrofit2.http.*
 
 
 interface ApiService {
@@ -22,6 +21,12 @@ interface ApiService {
 
     @GET("schedule/hours")
     fun getHours(@Query("doctor_id") doctorId: Int, @Query("date") date: String): Call<Schedule>
+
+    @POST("login")
+    fun postLogin(@Query("email") email: String, @Query("password") password: String): Call<LoginResponse>
+
+    @POST("logout")
+    fun postLogout(@Header("Authorization") authHeader: String): Call<Void>
 
     companion object Factory {
         private const val BASE_URL = "http://myappointments.fayt.cc/api/"

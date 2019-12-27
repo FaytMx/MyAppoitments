@@ -1,4 +1,4 @@
-package com.faytmx.myappoitments
+package com.faytmx.myappoitments.util
 
 import android.content.Context
 import android.content.SharedPreferences
