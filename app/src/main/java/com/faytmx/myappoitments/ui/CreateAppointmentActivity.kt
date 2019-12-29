@@ -15,7 +15,7 @@ import com.faytmx.myappoitments.R
 import com.faytmx.myappoitments.io.ApiService
 import com.faytmx.myappoitments.model.Doctor
 import com.faytmx.myappoitments.model.Schedule
-import com.faytmx.myappoitments.model.Specilaty
+import com.faytmx.myappoitments.model.Specialty
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_create_appointment.*
 import kotlinx.android.synthetic.main.card_view_step_one.*
@@ -85,8 +85,8 @@ class CreateAppointmentActivity : AppCompatActivity() {
 
     private fun loadSpecialties() {
         val call = apiService.getSpecialties()
-        call.enqueue(object : Callback<ArrayList<Specilaty>> {
-            override fun onFailure(call: Call<ArrayList<Specilaty>>, t: Throwable) {
+        call.enqueue(object : Callback<ArrayList<Specialty>> {
+            override fun onFailure(call: Call<ArrayList<Specialty>>, t: Throwable) {
                 Toast.makeText(
                     this@CreateAppointmentActivity,
                     getString(R.string.error_loading_specialties),
@@ -96,14 +96,14 @@ class CreateAppointmentActivity : AppCompatActivity() {
             }
 
             override fun onResponse(
-                call: Call<ArrayList<Specilaty>>,
-                response: Response<ArrayList<Specilaty>>
+                call: Call<ArrayList<Specialty>>,
+                response: Response<ArrayList<Specialty>>
             ) {
                 if (response.isSuccessful) { //[200-300]
                     response.body()?.let {
                         val specialties = it.toMutableList()
                         spinnerSpecialties.adapter =
-                            ArrayAdapter<Specilaty>(
+                            ArrayAdapter<Specialty>(
                                 this@CreateAppointmentActivity,
                                 android.R.layout.simple_list_item_1,
                                 specialties
@@ -138,7 +138,7 @@ class CreateAppointmentActivity : AppCompatActivity() {
                 position: Int,
                 id: Long
             ) {
-                val specialty = adapter?.getItemAtPosition(position) as Specilaty
+                val specialty = adapter?.getItemAtPosition(position) as Specialty
 //                Toast.makeText(this@CreateAppointmentActivity, "id: ${specialty.id}", Toast.LENGTH_SHORT).show()
                 loadDoctors(specialty.id)
             }

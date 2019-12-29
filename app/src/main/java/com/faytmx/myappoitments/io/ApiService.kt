@@ -1,9 +1,10 @@
 package com.faytmx.myappoitments.io
 
 import com.faytmx.myappoitments.io.response.LoginResponse
+import com.faytmx.myappoitments.model.Appointment
 import com.faytmx.myappoitments.model.Doctor
 import com.faytmx.myappoitments.model.Schedule
-import com.faytmx.myappoitments.model.Specilaty
+import com.faytmx.myappoitments.model.Specialty
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
@@ -14,7 +15,7 @@ import retrofit2.http.*
 
 interface ApiService {
     @GET("specialties")
-    fun getSpecialties(): Call<ArrayList<Specilaty>>
+    fun getSpecialties(): Call<ArrayList<Specialty>>
 
     @GET("specialties/{specialty}/doctors")
     fun getDoctor(@Path("specialty") specialtyId: Int): Call<ArrayList<Doctor>>
@@ -27,6 +28,9 @@ interface ApiService {
 
     @POST("logout")
     fun postLogout(@Header("Authorization") authHeader: String): Call<Void>
+
+    @GET("appointments")
+    fun getAppointments(@Header("Authorization") authHeader: String): Call<ArrayList<Appointment>>
 
     companion object Factory {
         private const val BASE_URL = "http://myappointments.fayt.cc/api/"
