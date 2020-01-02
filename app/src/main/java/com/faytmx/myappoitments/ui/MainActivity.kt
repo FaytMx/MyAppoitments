@@ -3,6 +3,7 @@ package com.faytmx.myappoitments.ui
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import com.faytmx.myappoitments.util.PreferenceHelper
 import kotlinx.android.synthetic.main.activity_main.*
@@ -13,6 +14,7 @@ import com.faytmx.myappoitments.io.ApiService
 import com.faytmx.myappoitments.io.response.LoginResponse
 import com.faytmx.myappoitments.util.toast
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.iid.FirebaseInstanceId
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -33,6 +35,11 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener(this) { instanceIdResult ->
+            val deviceToken = instanceIdResult.token
+            Log.d("FCMService", deviceToken)
+        }
 
         /*
         val preferences = getSharedPreferences("general", Context.MODE_PRIVATE)
@@ -61,11 +68,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun goToMenuActivity() {
-        val intent = Intent(this, MenuActivity::class.java)
-        startActivity(intent)
-        finish()
-    }
 
     private fun performLogin() {
         val email = etEmail.text.toString()
@@ -108,14 +110,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun createSessionPreference(jwt: String) {
-//        val preferences = getSharedPreferences("general", Context.MODE_PRIVATE)
-//        val editor = preferences.edit()
-//        editor.putBoolean("session", true)
-//        editor.apply()
         val preferences =
             PreferenceHelper.defaultPrefs(this)
         preferences["jwt"] = jwt
 
+    }
+
+    private fun goToMenuActivity() {
+        val intent = Intent(this, MenuActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 
     override fun onBackPressed() {

@@ -52,4 +52,12 @@
     <string name="welcome_name">Bienvenido %1$s</string>
     
     <string name="item_appointment_created_at">Esta se registro el dia %1$s con la siguinete descripcion</string>
+    <string name="create_appointment_success">Cita registrada correctamente</string>
+    <string name="create_appointment_error">Ocurrio un error inesperado registrando la cita médica</string>
+    <string name="label_password_confirmation">Confirmar clave</string>
+    <string name="error_register_fields">Favor completar todos los campos</string>
+    <string name="error_register_fields_password_do_not_match">Las contraseñas no coinciden</string>
+    <string name="error_register_validation">Ocurrio un error en el registro</string>
+    <string name="default_notification_channel_id">default_channel</string>
+    <string name="fcm_message">fcm_message</string>
 </resources>

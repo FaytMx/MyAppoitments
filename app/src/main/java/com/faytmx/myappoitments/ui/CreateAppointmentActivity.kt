@@ -13,9 +13,13 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.faytmx.myappoitments.R
 import com.faytmx.myappoitments.io.ApiService
+import com.faytmx.myappoitments.io.response.SimpleResponse
 import com.faytmx.myappoitments.model.Doctor
 import com.faytmx.myappoitments.model.Schedule
 import com.faytmx.myappoitments.model.Specialty
+import com.faytmx.myappoitments.util.PreferenceHelper
+import com.faytmx.myappoitments.util.PreferenceHelper.get
+import com.faytmx.myappoitments.util.toast
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_create_appointment.*
 import kotlinx.android.synthetic.main.card_view_step_one.*
@@ -34,6 +38,9 @@ class CreateAppointmentActivity : AppCompatActivity() {
 
     private var selectedCalendar = Calendar.getInstance()
     private var selectedTimeRadioBtn: RadioButton? = null
+    private val preferences by lazy {
+        PreferenceHelper.defaultPrefs(this)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,8 +77,7 @@ class CreateAppointmentActivity : AppCompatActivity() {
         }
 
         btnCreateAppointment.setOnClickListener {
-            Toast.makeText(this, "Cita registrada correctamente", Toast.LENGTH_SHORT).show()
-            finish()
+            performStoreAppointment()
         }
 
         loadSpecialties()
@@ -81,6 +87,51 @@ class CreateAppointmentActivity : AppCompatActivity() {
         val doctorOptions = arrayOf("Doctor A", "Doctor B", "Doctor C")
         spinnerDoctors.adapter =
             ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, doctorOptions)
+    }
+
+    private fun performStoreAppointment() {
+        btnCreateAppointment.isClickable = false
+
+        val jwt = preferences["jwt", ""]
+        val authHeader = "Bearer $jwt"
+        val description = tvConfirmDescription.text.toString()
+        val specialty = spinnerSpecialties.selectedItem as Specialty
+        val doctor = spinnerDoctors.selectedItem as Doctor
+        val scheduledDate = tvConfirmDate.text.toString()
+        val scheduledTime = tvConfirmTime.text.toString()
+        val type = tvConfirmType.text.toString()
+
+        val call = apiService.storeAppointment(
+            authHeader,
+            description,
+            specialty.id,
+            doctor.id,
+            scheduledDate,
+            scheduledTime,
+            type
+        )
+
+        call.enqueue(object : Callback<SimpleResponse> {
+            override fun onFailure(call: Call<SimpleResponse>, t: Throwable) {
+                toast(t.localizedMessage)
+            }
+
+            override fun onResponse(
+                call: Call<SimpleResponse>,
+                response: Response<SimpleResponse>
+            ) {
+                if (response.isSuccessful) {
+                    toast(getString(R.string.create_appointment_success))
+                    finish()
+                } else {
+                    toast(getString(R.string.create_appointment_error))
+                    btnCreateAppointment.isClickable = true
+                }
+            }
+
+        })
+
+
     }
 
     private fun loadSpecialties() {

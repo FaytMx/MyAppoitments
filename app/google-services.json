@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "502293329512",
+    "firebase_url": "https://my-appointments-8836e.firebaseio.com",
+    "project_id": "my-appointments-8836e",
+    "storage_bucket": "my-appointments-8836e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:502293329512:android:d2989b96cc5c3c232c2ddd",
+        "android_client_info": {
+          "package_name": "com.faytmx.myappoitments"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "502293329512-c54ohuhdmgg62sq66g8jntdq0e3qstie.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDJ-fF4-2GuSf8fl04MeZ-5aDf55Eip8cA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "502293329512-c54ohuhdmgg62sq66g8jntdq0e3qstie.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
