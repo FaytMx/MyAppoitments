@@ -2,10 +2,7 @@ package com.faytmx.myappoitments.io
 
 import com.faytmx.myappoitments.io.response.LoginResponse
 import com.faytmx.myappoitments.io.response.SimpleResponse
-import com.faytmx.myappoitments.model.Appointment
-import com.faytmx.myappoitments.model.Doctor
-import com.faytmx.myappoitments.model.Schedule
-import com.faytmx.myappoitments.model.Specialty
+import com.faytmx.myappoitments.model.*
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
@@ -15,6 +12,21 @@ import retrofit2.http.*
 
 
 interface ApiService {
+
+    @GET("user")
+    @Headers("Accept: application/json")
+    fun getUser(@Header("Authorization") authHeader: String): Call<User>
+
+    @POST("user")
+    @Headers("Accept: application/json")
+    fun postUser(
+        @Header("Authorization") authHeader: String,
+        @Query("name") name: String,
+        @Query("phone") phone: String,
+        @Query("address") address: String
+    ): Call<Void>
+
+
     @GET("specialties")
     fun getSpecialties(): Call<ArrayList<Specialty>>
 
@@ -53,6 +65,13 @@ interface ApiService {
         @Query("password") password: String,
         @Query("password_confirmation") password_confirmation: String
     ): Call<LoginResponse>
+
+    @POST("fcm/token")
+    @Headers("Accept: application/json")
+    fun postToken(
+        @Header("Authorization") authHeader: String,
+        @Query("device_token") token: String
+    ): Call<Void>
 
     companion object Factory {
         private const val BASE_URL = "http://myappointments.fayt.cc/api/"

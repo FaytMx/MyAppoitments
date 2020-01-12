@@ -1,20 +1,18 @@
 package com.faytmx.myappoitments.ui
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
-import com.faytmx.myappoitments.util.PreferenceHelper
-import kotlinx.android.synthetic.main.activity_main.*
-import com.faytmx.myappoitments.util.PreferenceHelper.get
-import com.faytmx.myappoitments.util.PreferenceHelper.set
+import androidx.appcompat.app.AppCompatActivity
 import com.faytmx.myappoitments.R
 import com.faytmx.myappoitments.io.ApiService
 import com.faytmx.myappoitments.io.response.LoginResponse
+import com.faytmx.myappoitments.util.PreferenceHelper
+import com.faytmx.myappoitments.util.PreferenceHelper.get
+import com.faytmx.myappoitments.util.PreferenceHelper.set
 import com.faytmx.myappoitments.util.toast
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.iid.FirebaseInstanceId
+import kotlinx.android.synthetic.main.activity_main.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -36,10 +34,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener(this) { instanceIdResult ->
-            val deviceToken = instanceIdResult.token
-            Log.d("FCMService", deviceToken)
-        }
+
 
         /*
         val preferences = getSharedPreferences("general", Context.MODE_PRIVATE)
@@ -97,7 +92,7 @@ class MainActivity : AppCompatActivity() {
                     if (loginResponse.success) {
                         createSessionPreference(loginResponse.jwt)
                         toast(getString(R.string.welcome_name, loginResponse.user.name))
-                        goToMenuActivity()
+                        goToMenuActivity(true)
                     } else {
                         toast(getString(R.string.error_invalid_credentials))
                     }
@@ -116,8 +111,11 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun goToMenuActivity() {
+    private fun goToMenuActivity(isUserInput: Boolean = false) {
         val intent = Intent(this, MenuActivity::class.java)
+        if (isUserInput) {
+            intent.putExtra("store_token", true)
+        }
         startActivity(intent)
         finish()
     }

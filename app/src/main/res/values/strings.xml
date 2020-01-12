@@ -50,7 +50,7 @@
     <string name="error_invalid_credentials">Las credenciales son incorrectas</string>
     <string name="error_empty_credentials">Por favor ingrese un correo y contraseña</string>
     <string name="welcome_name">Bienvenido %1$s</string>
-    
+
     <string name="item_appointment_created_at">Esta se registro el dia %1$s con la siguinete descripcion</string>
     <string name="create_appointment_success">Cita registrada correctamente</string>
     <string name="create_appointment_error">Ocurrio un error inesperado registrando la cita médica</string>
@@ -60,4 +60,12 @@
     <string name="error_register_validation">Ocurrio un error en el registro</string>
     <string name="default_notification_channel_id">default_channel</string>
     <string name="fcm_message">fcm_message</string>
+    <string name="btn_edit_profile">Editar perfil</string>
+    <string name="label_edit_profile">Editar datos básicos</string>
+    <string name="label_phone">Número de teléfono</string>
+    <string name="label_address">Dirección</string>
+    <string name="btn_save">Guardar cambios</string>
+    <string name="profile_success_message">Los cambios se han guardado correctamente</string>
+    <string name="error_profile_name">El nombre ingresado es demasiado corto</string>
+    <string name="you_need_a_phone">Es necesario asociar primero un telefono a tu cuenta</string>
 </resources>

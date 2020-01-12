@@ -12,12 +12,28 @@ import androidx.core.app.NotificationCompat
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
 import com.faytmx.myappoitments.R
+import com.faytmx.myappoitments.io.ApiService
 import com.faytmx.myappoitments.ui.MainActivity
+import com.faytmx.myappoitments.ui.MenuActivity
+import com.faytmx.myappoitments.util.PreferenceHelper
+import com.faytmx.myappoitments.util.PreferenceHelper.get
+import com.faytmx.myappoitments.util.toast
+import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
 class FCMService : FirebaseMessagingService() {
+    private val apiService by lazy {
+        ApiService.create()
+    }
+
+    private val preferences by lazy {
+        PreferenceHelper.defaultPrefs(this)
+    }
 
     /**
      * Called when message is received.
@@ -48,12 +64,18 @@ class FCMService : FirebaseMessagingService() {
 
         // Check if message contains a notification payload.
         remoteMessage.notification?.let {
+            val title = remoteMessage.notification?.title ?: getString(R.string.app_name)
+            val body = remoteMessage.notification?.body
+            Log.d(TAG, "Message Notification Title: ${it.title}")
             Log.d(TAG, "Message Notification Body: ${it.body}")
+
+            if (body != null)
+                sendNotification(title, body)
         }
 
         // Also if you intend on generating your own notifications as a result of a received FCM
         // message, here is where that should be initiated. See sendNotification method below.
-        //sendNotification()
+
     }
     // [END receive_message]
 
@@ -63,13 +85,30 @@ class FCMService : FirebaseMessagingService() {
      * the previous token had been compromised. Note that this is called when the InstanceID token
      * is initially generated so this is where you would retrieve the token.
      */
-    override fun onNewToken(token: String) {
-        Log.d(TAG, "Refreshed token: $token")
+    override fun onNewToken(newToken: String) {
+        Log.d(TAG, "Refreshed token: $newToken")
 
-        // If you want to send messages to this application instance or
-        // manage this apps subscriptions on the server side, send the
-        // Instance ID token to your app server.
-        sendRegistrationToServer(token)
+        super.onNewToken(newToken)
+
+        val jwt = preferences["jwt", ""]
+        val authHeader = "Bearer $jwt"
+
+        val call = apiService.postToken(authHeader, newToken)
+        call.enqueue(object : Callback<Void> {
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+                toast(t.localizedMessage)
+            }
+
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                if (response.isSuccessful) {
+                    Log.d(TAG, "Token registrado correctamente")
+                } else {
+                    Log.d(TAG, "Hubo un problema al registrar el token")
+                }
+            }
+
+        })
+
     }
     // [END on_new_token]
 
@@ -103,7 +142,7 @@ class FCMService : FirebaseMessagingService() {
      *
      * @param messageBody FCM message body received.
      */
-    private fun sendNotification(messageBody: String) {
+    private fun sendNotification(messageTitle: String, messageBody: String) {
         val intent = Intent(this, MainActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         val pendingIntent = PendingIntent.getActivity(
@@ -115,7 +154,7 @@ class FCMService : FirebaseMessagingService() {
         val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
         val notificationBuilder = NotificationCompat.Builder(this, channelId)
             .setSmallIcon(R.drawable.ic_schedule)
-            .setContentTitle(getString(R.string.fcm_message))
+            .setContentTitle(messageTitle)
             .setContentText(messageBody)
             .setAutoCancel(true)
             .setSound(defaultSoundUri)
